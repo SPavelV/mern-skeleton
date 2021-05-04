@@ -2,6 +2,14 @@ import path from "path";
 import express from "express";
 import devBundle from "./devBundle";
 import template from "./../template";
+import { MongoClient } from "mongodb";
+
+const url =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/mernSimpleSetup";
+MongoClient.connect(url, (err, db) => {
+  console.log("Connected successfully to mongodb server");
+  db.close();
+});
 
 const CURRENT_WORKING_DIR = process.cwd();
 const app = express();
