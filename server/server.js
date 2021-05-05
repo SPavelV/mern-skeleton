@@ -2,17 +2,15 @@ import path from "path";
 import express from "express";
 import devBundle from "./devBundle";
 import template from "./../template";
+//comment out before building for production
 import { MongoClient } from "mongodb";
 
-const url =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/mernSimpleSetup";
-MongoClient.connect(url, (err, db) => {
-  console.log("Connected successfully to mongodb server");
-  db.close();
-});
+const app = express();
+
+//comment out before building for production
+devBundle.compile(app);
 
 const CURRENT_WORKING_DIR = process.cwd();
-const app = express();
 app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
 
 app.get("/", (req, res) => {
@@ -26,4 +24,16 @@ app.listen(port, function onStart(err) {
   }
   console.info("Server started on port %s.", port);
 });
-devBundle.compile(app);
+
+// Database Connection URL
+const url =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/mernSimpleSetup";
+// Use connect method to connect to the server
+MongoClient.connect(
+  url,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err, db) => {
+    console.log("Connected successfully to mongodb server");
+    db.close();
+  }
+);
